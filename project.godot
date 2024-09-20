@@ -14,7 +14,7 @@ _global_script_class_icons={
 
 [application]
 
-config/name="SpaceBackground"
+config/name="BatchSpaceBackground"
 run/main_scene="res://GUI/GUI.tscn"
 config/icon="res://icon.png"
 

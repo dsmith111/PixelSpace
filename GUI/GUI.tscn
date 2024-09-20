@@ -403,9 +403,9 @@ margin_left = 223.0
 margin_right = 442.0
 margin_bottom = 26.0
 size_flags_horizontal = 3
-min_value = 100.0
+min_value = 1.0
 max_value = 3000.0
-value = 200.0
+value = 10.0
 
 [node name="BatchGenerateButton" type="Button" parent="HBoxContainer/ColorRect/Settings"]
 margin_top = 554.0

@@ -5,12 +5,21 @@ onready var generator = $Viewport/BackgroundGenerator
 onready var viewport = $Viewport
 onready var global_scheme = preload("res://BackgroundGenerator/Colorscheme.tres")
 
+signal save_completed
+signal completed
+
 var new_size = Vector2(200, 200)
 var batch_size = 10
 
 func _ready():
 	randomize()
 	_generate_new()
+
+func process_image():
+	_generate_new()
+	yield (generator, "generation_completed")
+	export_image()
+	yield (self, "save_completed")
 
 func _generate_new():
 	$Viewport.size = new_size
@@ -34,7 +43,7 @@ func _generate_new():
 
 func _on_NewButton_pressed():
 	_generate_new()
-
+	
 func _on_ExportButton_pressed():
 	$Viewport/Camera1.current = false
 	$Viewport/Camera2.current = true
@@ -50,17 +59,17 @@ func export_image():
 	save_image(img)
 
 func _on_BatchGenerateButton_pressed():
-	for i in range(batch_size):
-		_generate_new()
-		export_image()
+	for _i in range(batch_size):
+		yield (process_image(), "completed") # Assume process_image() emits 'completed' when done
 
 func save_image(img):
-	var timestamp = str(OS.get_unix_time())
+	var timestamp = str(OS.get_ticks_usec())
 	if OS.get_name() == "HTML5" and OS.has_feature('JavaScript'):
 		var filesaver = get_tree().root.get_node("/root/HTML5File")
-		filesaver.save_image(img, "Space Background " + timestamp)
+		filesaver.save_image(img, "gen_space_bg_" + timestamp)
 	else:
-		img.save_png("res://Space Background " + timestamp + ".png")
+		img.save_png("res://gen_space_bg_" + timestamp + ".png")
+	emit_signal("save_completed")
 
 func _on_SaveTimer_timeout():
 	export_image()
@@ -103,4 +112,4 @@ func _on_BatchSize_value_changed(value):
 	batch_size = int(value)
 
 func _on_EnableTransparency_pressed():
-	generator.toggle_transparancy()
+	generator.toggle_transparency()
