@@ -5,7 +5,8 @@ onready var generator = $Viewport/BackgroundGenerator
 onready var viewport = $Viewport
 onready var global_scheme = preload("res://BackgroundGenerator/Colorscheme.tres")
 
-var new_size = Vector2(200,200)
+var new_size = Vector2(200, 200)
+var batch_size = 10
 
 func _ready():
 	randomize()
@@ -16,10 +17,10 @@ func _generate_new():
 	generator.rect_min_size = new_size
 	generator.rect_size = new_size
 	generator.set_mirror_size(new_size)
-	$Viewport/Camera1.zoom = new_size/viewport.size
+	$Viewport/Camera1.zoom = new_size / viewport.size
 	$Viewport/Camera1.offset = new_size * 0.5
 	
-	var aspect = Vector2(1,1)
+	var aspect = Vector2(1, 1)
 	if new_size.x > new_size.y:
 		aspect = Vector2(new_size.y / new_size.x, 1.0)
 	else:
@@ -27,8 +28,8 @@ func _generate_new():
 	
 	$HBoxContainer/Control/TextureRect.rect_size = aspect * 600
 
-	yield(get_tree(), "idle_frame")
-	$HBoxContainer/Control/TextureRect.rect_size = Vector2(600,600)
+	yield (get_tree(), "idle_frame")
+	$HBoxContainer/Control/TextureRect.rect_size = Vector2(600, 600)
 	generator.generate_new()
 
 func _on_NewButton_pressed():
@@ -44,16 +45,22 @@ func export_image():
 	img.create(new_size.x, new_size.y, false, Image.FORMAT_RGBA8)
 	var viewport_img = viewport.get_texture().get_data()
 	
-	img.blit_rect(viewport_img, Rect2(0,0,new_size.x,new_size.y), Vector2(0,0))
+	img.blit_rect(viewport_img, Rect2(0, 0, new_size.x, new_size.y), Vector2(0, 0))
 	
 	save_image(img)
 
+func _on_BatchGenerateButton_pressed():
+	for i in range(batch_size):
+		_generate_new()
+		export_image()
+
 func save_image(img):
+	var timestamp = str(OS.get_unix_time())
 	if OS.get_name() == "HTML5" and OS.has_feature('JavaScript'):
 		var filesaver = get_tree().root.get_node("/root/HTML5File")
-		filesaver.save_image(img, "Space Background")
+		filesaver.save_image(img, "Space Background " + timestamp)
 	else:
-		img.save_png("res://Space Background.png")
+		img.save_png("res://Space Background " + timestamp + ".png")
 
 func _on_SaveTimer_timeout():
 	export_image()
@@ -91,6 +98,9 @@ func _on_PixelsWidth_value_changed(value):
 	value = clamp(value, 100, 3000)
 	new_size.x = int(value)
 
+func _on_BatchSize_value_changed(value):
+	value = clamp(value, 1, 100)
+	batch_size = int(value)
 
 func _on_EnableTransparency_pressed():
 	generator.toggle_transparancy()
