@@ -1,20 +1,12 @@
 # PixelSpace
 
-Create and export procedural, pixel-styled space backgrounds. PixelSpace is a small Godot app for generating customizable scenes with stars, dust, nebulae, and planets.
+Create and export procedural, pixel-styled space backgrounds. PixelSpace is a small Godot app for generating customizable scenes with stars, dust, nebulae, and planets. Choose a color palette, set the output dimensions, and toggle visual layers to shape each image. Generate one image at a time or create a batch of randomized backgrounds. All with a live preview. 
 
 ## Screenshot
 
 <p align="center">
   <img src="docs/screenshots/pixelspace-generator.png" alt="PixelSpace generator showing a generated space background and its controls" width="100%">
 </p>
-
-## What it does
-
-PixelSpace generates space artwork in a live preview. Choose a color palette, set the output dimensions, and toggle visual layers to shape each image. Generate one image at a time or create a batch of randomized backgrounds.
-
-## Why PixelSpace
-
-Quickly make original space backgrounds without assembling each scene by hand. PixelSpace combines procedural shader effects with randomized stars and planets, with options for transparent backgrounds and tileable output.
 
 ## Features
 
