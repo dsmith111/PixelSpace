@@ -19,7 +19,6 @@ func process_image():
 	_generate_new()
 	yield (generator, "generation_completed")
 	export_image()
-	yield (self, "save_completed")
 
 func _generate_new():
 	$Viewport.size = new_size
